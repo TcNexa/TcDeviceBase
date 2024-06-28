@@ -1,0 +1,210 @@
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <FileVersion>1.0.0.0</FileVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{8d1194fa-ccab-4740-8cf0-349c308c11cc}</ProjectGuid>
+    <SubObjectsSortedByName>True</SubObjectsSortedByName>
+    <DownloadApplicationInfo>true</DownloadApplicationInfo>
+    <WriteProductVersion>true</WriteProductVersion>
+    <GenerateTpy>false</GenerateTpy>
+    <Name>TcDeviceBase</Name>
+    <ProgramVersion>3.1.4024.0</ProgramVersion>
+    <Application>{53983192-efcf-4745-8e86-06fce683096d}</Application>
+    <TypeSystem>{9debe551-e335-4b4e-a053-b3adb94f9422}</TypeSystem>
+    <Implicit_Task_Info>{d9e4b067-320d-4b28-b8eb-0654efc5f00e}</Implicit_Task_Info>
+    <Implicit_KindOfTask>{06ddec1e-818f-44d1-be68-d273e76c58c5}</Implicit_KindOfTask>
+    <Implicit_Jitter_Distribution>{70b533ca-cf05-4e2d-bc4f-b2616afe16b8}</Implicit_Jitter_Distribution>
+    <LibraryReferences>{99feacec-9f98-4d4c-9abe-c9f9d79c5a62}</LibraryReferences>
+    <Company>TcNexa</Company>
+    <Released>false</Released>
+    <Title>TcDeviceBase</Title>
+    <ProjectVersion>1.0.0.0</ProjectVersion>
+    <LibraryCategories>
+      <LibraryCategory>
+        <Id>{97b7b969-1a00-4526-9b48-343321aa96be}</Id>
+        <Version>1.0.0.0</Version>
+        <DefaultName>TcNexa</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{f0f4385a-5d21-47bf-ac2f-8a127466204b}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{97b7b969-1a00-4526-9b48-343321aa96be}</Id>
+        </ParentCategory>
+        <DefaultName>Components</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{97b7b969-1a00-4526-9b48-343321aa96be}</Id>
+        </ParentCategory>
+        <DefaultName>Devices</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{0bb28911-3f1d-4f5f-9ea6-775324a769a8}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Scanner</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{aac4f339-1914-4477-a659-bff55d6f2fcd}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Laser Marker</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{391d874d-3ce0-4df5-995c-e40aff56a989}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Screwdriver</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{789f5f75-de42-41eb-b351-df0184ae7dd3}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Atis</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{5daa67ba-29ff-430f-a6be-c6c96c95e6b4}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Power Supply</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{dc49a641-613c-48ff-8f9f-e465f91754b1}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Cylinder</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{24170b8a-01bc-4fda-9ae9-f7ddc6d02757}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Hmi</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{7186d0c1-43db-42e1-a3f5-6ea2bc6b81c0}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d76a7925-a4fc-4f10-b324-0fd4af1af921}</Id>
+        </ParentCategory>
+        <DefaultName>Base</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{fc5e2bb5-a3a0-402a-a093-8dbb9ca957a2}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{97b7b969-1a00-4526-9b48-343321aa96be}</Id>
+        </ParentCategory>
+        <DefaultName>Protocols</DefaultName>
+      </LibraryCategory>
+    </LibraryCategories>
+    <SelectedLibraryCategories>
+      <Id>{7186d0c1-43db-42e1-a3f5-6ea2bc6b81c0}</Id>
+    </SelectedLibraryCategories>
+    <DefaultNamespace>TcNexa_Devices_Base_TcDeviceBase</DefaultNamespace>
+    <Author>ATI Software Engineering</Author>
+    <CombineIds>true</CombineIds>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Base\DUTs\ST_MethodState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Base\POUs\FB_DeviceBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_DeviceBase.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
+    <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Tests\PRG_TEST.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Version\Global_Version.TcGVL">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Base" />
+    <Folder Include="Base\DUTs" />
+    <Folder Include="Base\POUs" />
+    <Folder Include="GVLs" />
+    <Folder Include="Tests" />
+    <Folder Include="Version" />
+  </ItemGroup>
+  <ItemGroup>
+    <PlaceholderReference Include="Tc2_Standard">
+      <DefaultResolution>Tc2_Standard, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_Standard</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc2_System">
+      <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc2_System</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_Module">
+      <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_Module</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="TcProcess">
+      <DefaultResolution>TcProcess, * (TcNexa)</DefaultResolution>
+      <Namespace>TcNexa_Components_TcProcess</Namespace>
+    </PlaceholderReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TcDeviceBase.tmc">
+      <SubType>Content</SubType>
+    </None>
+  </ItemGroup>
+  <ProjectExtensions>
+    <PlcProjectOptions>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="OptionKey">
+      <v n="Name">"&lt;ProjectRoot&gt;"</v>
+      <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
+        <v>{40450F57-0AA3-4216-96F3-5444ECB29763}</v>
+        <o>
+          <v n="Name">"{40450F57-0AA3-4216-96F3-5444ECB29763}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" ckt="String" cvt="String">
+            <v>ActiveVisuProfile</v>
+            <v>IR0whWr8bwfwBwAAiD2qpQAAAABVAgAA37x72QAAAAABAAAAAAAAAAEaUwB5AHMAdABlAG0ALgBTAHQAcgBpAG4AZwACTHsAZgA5ADUAYgBiADQAMgA2AC0ANQA1ADIANAAtADQAYgA0ADUALQA5ADQAMAAwAC0AZgBiADAAZgAyAGUANwA3AGUANQAxAGIAfQADCE4AYQBtAGUABDBUAHcAaQBuAEMAQQBUACAAMwAuADEAIABCAHUAaQBsAGQAIAA0ADAAMgA0AC4ANwAFFlAAcgBvAGYAaQBsAGUARABhAHQAYQAGTHsAMQA2AGUANQA1AGIANgAwAC0ANwAwADQAMwAtADQAYQA2ADMALQBiADYANQBiAC0ANgAxADQANwAxADMAOAA3ADgAZAA0ADIAfQAHEkwAaQBiAHIAYQByAGkAZQBzAAhMewAzAGIAZgBkADUANAA1ADkALQBiADAANwBmAC0ANABkADYAZQAtAGEAZQAxAGEALQBhADgAMwAzADUANgBhADUANQAxADQAMgB9AAlMewA5AGMAOQA1ADgAOQA2ADgALQAyAGMAOAA1AC0ANAAxAGIAYgAtADgAOAA3ADEALQA4ADkANQBmAGYAMQBmAGUAZABlADEAYQB9AAoOVgBlAHIAcwBpAG8AbgALBmkAbgB0AAwKVQBzAGEAZwBlAA0KVABpAHQAbABlAA4aVgBpAHMAdQBFAGwAZQBtAE0AZQB0AGUAcgAPDkMAbwBtAHAAYQBuAHkAEAxTAHkAcwB0AGUAbQARElYAaQBzAHUARQBsAGUAbQBzABIwVgBpAHMAdQBFAGwAZQBtAHMAUwBwAGUAYwBpAGEAbABDAG8AbgB0AHIAbwBsAHMAEyhWAGkAcwB1AEUAbABlAG0AcwBXAGkAbgBDAG8AbgB0AHIAbwBsAHMAFCRWAGkAcwB1AEUAbABlAG0AVABlAHgAdABFAGQAaQB0AG8AcgAVIlYAaQBzAHUATgBhAHQAaQB2AGUAQwBvAG4AdAByAG8AbAAWFHYAaQBzAHUAaQBuAHAAdQB0AHMAFwxzAHkAcwB0AGUAbQAYGFYAaQBzAHUARQBsAGUAbQBCAGEAcwBlABkmRABlAHYAUABsAGEAYwBlAGgAbwBsAGQAZQByAHMAVQBzAGUAZAAaCGIAbwBvAGwAGyJQAGwAdQBnAGkAbgBDAG8AbgBzAHQAcgBhAGkAbgB0AHMAHEx7ADQAMwBkADUAMgBiAGMAZQAtADkANAAyAGMALQA0ADQAZAA3AC0AOQBlADkANAAtADEAYgBmAGQAZgAzADEAMABlADYAMwBjAH0AHRxBAHQATABlAGEAcwB0AFYAZQByAHMAaQBvAG4AHhRQAGwAdQBnAGkAbgBHAHUAaQBkAB8WUwB5AHMAdABlAG0ALgBHAHUAaQBkACBIYQBmAGMAZAA1ADQANAA2AC0ANAA5ADEANAAtADQAZgBlADcALQBiAGIANwA4AC0AOQBiAGYAZgBlAGIANwAwAGYAZAAxADcAIRRVAHAAZABhAHQAZQBJAG4AZgBvACJMewBiADAAMwAzADYANgBhADgALQBiADUAYwAwAC0ANABiADkAYQAtAGEAMAAwAGUALQBlAGIAOAA2ADAAMQAxADEAMAA0AGMAMwB9ACMOVQBwAGQAYQB0AGUAcwAkTHsAMQA4ADYAOABmAGYAYwA5AC0AZQA0AGYAYwAtADQANQAzADIALQBhAGMAMAA2AC0AMQBlADMAOQBiAGIANQA1ADcAYgA2ADkAfQAlTHsAYQA1AGIAZAA0ADgAYwAzAC0AMABkADEANwAtADQAMQBiADUALQBiADEANgA0AC0ANQBmAGMANgBhAGQAMgBiADkANgBiADcAfQAmFk8AYgBqAGUAYwB0AHMAVAB5AHAAZQAnVFUAcABkAGEAdABlAEwAYQBuAGcAdQBhAGcAZQBNAG8AZABlAGwARgBvAHIAQwBvAG4AdgBlAHIAdABpAGIAbABlAEwAaQBiAHIAYQByAGkAZQBzACgQTABpAGIAVABpAHQAbABlACkUTABpAGIAQwBvAG0AcABhAG4AeQAqHlUAcABkAGEAdABlAFAAcgBvAHYAaQBkAGUAcgBzACs4UwB5AHMAdABlAG0ALgBDAG8AbABsAGUAYwB0AGkAbwBuAHMALgBIAGEAcwBoAHQAYQBiAGwAZQAsEnYAaQBzAHUAZQBsAGUAbQBzAC1INgBjAGIAMQBjAGQAZQAxAC0AZAA1AGQAYwAtADQAYQAzAGIALQA5ADAANQA0AC0AMgAxAGYAYQA3ADUANgBhADMAZgBhADQALihJAG4AdABlAHIAZgBhAGMAZQBWAGUAcgBzAGkAbwBuAEkAbgBmAG8AL0x7AGMANgAxADEAZQA0ADAAMAAtADcAZgBiADkALQA0AGMAMwA1AC0AYgA5AGEAYwAtADQAZQAzADEANABiADUAOQA5ADYANAAzAH0AMBhNAGEAagBvAHIAVgBlAHIAcwBpAG8AbgAxGE0AaQBuAG8AcgBWAGUAcgBzAGkAbwBuADIMTABlAGcAYQBjAHkAMzBMAGEAbgBnAHUAYQBnAGUATQBvAGQAZQBsAFYAZQByAHMAaQBvAG4ASQBuAGYAbwA0MEwAbwBhAGQATABpAGIAcgBhAHIAaQBlAHMASQBuAHQAbwBQAHIAbwBqAGUAYwB0ADUaQwBvAG0AcABhAHQAaQBiAGkAbABpAHQAeQDQAAIaA9ADAS0E0AUGGgfQBwgaAUUHCQjQAAkaBEUKCwQDAAAABQAAAA0AAAAAAAAA0AwLrQIAAADQDQEtDtAPAS0Q0AAJGgRFCgsEAwAAAAUAAAANAAAAKAAAANAMC60BAAAA0A0BLRHQDwEtENAACRoERQoLBAMAAAAFAAAADQAAAAAAAADQDAutAgAAANANAS0S0A8BLRDQAAkaBEUKCwQDAAAABQAAAA0AAAAUAAAA0AwLrQIAAADQDQEtE9APAS0Q0AAJGgRFCgsEAwAAAAUAAAANAAAAAAAAANAMC60CAAAA0A0BLRTQDwEtENAACRoERQoLBAMAAAAFAAAADQAAAAAAAADQDAutAgAAANANAS0V0A8BLRDQAAkaBEUKCwQDAAAABQAAAA0AAAAAAAAA0AwLrQIAAADQDQEtFtAPAS0X0AAJGgRFCgsEAwAAAAUAAAANAAAAKAAAANAMC60EAAAA0A0BLRjQDwEtENAZGq0BRRscAdAAHBoCRR0LBAMAAAAFAAAADQAAAAAAAADQHh8tINAhIhoCRSMkAtAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAAAAANADAS0n0CgBLRHQKQEtENAAJRoFRQoLBAMAAAADAAAAAAAAAAoAAADQJgutAQAAANADAS0n0CgBLRHQKQEtEJoqKwFFAAEC0AABLSzQAAEtF9AAHy0t0C4vGgPQMAutAQAAANAxC60XAAAA0DIarQDQMy8aA9AwC60CAAAA0DELrQMAAADQMhqtANA0Gq0A0DUarQA=</v>
+          </d>
+        </o>
+        <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
+        <o>
+          <v n="Name">"{192FAD59-8248-4824-A8DE-9177C94C195A}"</v>
+          <d n="SubKeys" t="Hashtable" />
+          <d n="Values" t="Hashtable" />
+        </o>
+      </d>
+      <d n="Values" t="Hashtable" />
+    </o>
+        </Data>
+        <TypeList>
+          <Type n="Hashtable">System.Collections.Hashtable</Type>
+          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
+    </PlcProjectOptions>
+  </ProjectExtensions>
+</Project>

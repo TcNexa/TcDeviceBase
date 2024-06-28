@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_DeviceBase" Id="{28f176dc-7d79-4f66-93d6-dab833d4de43}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT FB_DeviceBase
+VAR
+	_Step					: TcNexa_Components_TcProcess.FB_Step;
+	_InternalResponse		: TcNexa_Components_TcProcess.FB_MethodResponse;
+	_calledMethod			: STRING;
+	_tmpText				: Tc2_System.T_MaxString;
+	_methodTimeout			: Tc2_Standard.TON;
+	_methodState			: ST_MethodState;
+	_methodName				: STRING;
+	_executeMethod			: BOOL;
+	_cellTag				: STRING;
+	_stationTag				: STRING;
+	_name					: STRING;
+	_tag					: STRING;
+	_nameTag				: STRING;
+	_methodTime				: TIME:= Tc2_System.DEFAULT_ADS_TIMEOUT;
+	_noMethodCalledTrigger	: Tc2_Standard.R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{5c2890a7-7e5f-4c69-8a23-89b17057028e}" />
+    <Method Name="_appendErrorDescription" Id="{a312ab92-9b19-4106-89a1-1228c35433be}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _appendErrorDescription : Tc2_System.T_MaxString
+VAR_INPUT
+	description		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= _methodName);
+_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= ' error');
+_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= ERROR_DESCRIPTION_DELIMITER);
+_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= description);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getBusyDescription" Id="{ad81c59e-be83-4821-981b-b38e247595b3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getBusyDescription : Tc2_System.T_MaxString
+VAR_INPUT
+	description		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= _methodName);
+_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= ' ');
+_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= description);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getErrorDescription" Id="{2ad2e588-dbff-4268-b5b8-56c4cdc483fd}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getErrorDescription : Tc2_System.T_MaxString
+VAR_INPUT
+	error		: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getErrorDescription:= _nameTag;
+IF (_methodName <> '') THEN
+	_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= ' ');
+	_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= _methodName);
+END_IF
+_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= ' error ');
+_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= error);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getErrorIdDescription" Id="{2facf813-b41a-422c-9b51-645fde71ede0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getErrorIdDescription : Tc2_System.T_MaxString
+VAR_INPUT
+	errorId		: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= _methodName);
+_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= ' error with errorId ');
+_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= UDINT_TO_STRING(errorId));
+_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= '');]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getStepMissingError" Id="{252ef9e2-5672-4487-8a19-f62025723ebf}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getStepMissingError : Tc2_System.T_MaxString
+VAR_INPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= _methodName);
+_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= ' error step ');	
+_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= INT_TO_STRING(_Step.actual));	
+_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= ' not found');					
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getTimeoutDescription" Id="{3f259c8c-ff19-4a10-ae86-06fd3db6f4a4}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getTimeoutDescription : Tc2_System.T_MaxString
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getTimeoutDescription:= Tc2_Standard.CONCAT(STR1:= _name, STR2:= ' timeout during ');
+_getTimeoutDescription:= Tc2_Standard.CONCAT(STR1:= _getTimeoutDescription, STR2:= _methodName);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_getWarningIdDescription" Id="{6bf409e9-c142-4375-b852-87fc0dd72adb}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _getWarningIdDescription : Tc2_System.T_MaxString
+VAR_INPUT
+	Id		: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= _methodName);
+_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= ' warning with warningId ');
+_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= UDINT_TO_STRING(Id));
+_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= '');]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_methodFooter" Id="{d0bdd6e8-f166-4433-a084-1d3b423dd3e0}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _methodFooter
+VAR_INPUT
+	Response		: REFERENCE TO TcNexa_Components_TcProcess.FB_MethodResponse;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _InternalResponse.busy THEN _calledMethod:= ''; END_IF
+IF __ISVALIDREF(Response) THEN Response.copyFrom(Response:= _InternalResponse); END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_methodHeader" Id="{bc3f09dc-76e5-4494-acd1-52e25125e518}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED _methodHeader : ST_MethodState
+VAR_INPUT
+	methodName		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_methodName:= methodName;
+
+IF (_calledMethod = '') THEN
+	_calledMethod:= methodName;
+	_Step.init();
+	_methodTimeout(IN:= FALSE);
+	_methodHeader.init:= TRUE;
+	_methodHeader.execute:= TRUE;
+	_executeMethod:= TRUE;
+	_InternalResponse.setBusy(description:= methodName);
+ELSIF (_calledMethod = methodName) THEN
+	_executeMethod:= TRUE;
+	_methodTimeout(IN:= TRUE, PT:= _methodTime);
+	IF _methodTimeout.Q THEN
+		_InternalResponse.setFail(description:= _getTimeoutDescription());
+		_methodHeader.timeout:= TRUE;
+	ELSE
+		_tmpText:= _getBusyDescription(description:= 'in progress...');
+		_InternalResponse.setBusy(description:= _tmpText);
+		_methodHeader.execute:= TRUE;
+	END_IF
+ELSE
+	_tmpText:= _getBusyDescription(description:= 'in progress...');
+	_InternalResponse.setBusy(description:= _tmpText);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{7a6acdfc-e845-4782-8de5-4586e3a9d3fa}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains 	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode 	: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	cellTag			: STRING;
+	stationTag		: STRING;
+	name			: STRING;
+	tag				: STRING;
+	timeout			: TIME;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^._cellTag:= cellTag;
+THIS^._stationTag:= stationTag;
+THIS^._name:= name;
+THIS^._tag:= tag;
+THIS^._methodTime:= timeout;
+
+_nameTag:= name;
+IF (tag <> '') THEN
+	IF (name <> '') THEN
+		_nameTag:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
+	END_IF
+	_nameTag:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= '(');
+	_nameTag:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= tag);
+	_nameTag:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ')');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_main" Id="{4e011587-8f61-4dd3-8bf3-259b7d2e4ab5}">
+      <Declaration><![CDATA[METHOD PUBLIC FB_main
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_noMethodCalledTrigger(CLK:= (_calledMethod = ''));
+
+IF (_calledMethod <> '') AND NOT _executeMethod THEN
+	_calledMethod:= '';
+END_IF
+
+_executeMethod:= FALSE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

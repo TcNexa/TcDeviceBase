@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL_DeviceBase" Id="{58bcd0b5-19cf-466e-95b7-9b177e5934bc}">
+    <Declaration><![CDATA[VAR_GLOBAL
+	DEFAULT_DEVICE_TIMEOUT			: TIME:= Tc2_System.DEFAULT_ADS_TIMEOUT;
+	ERROR_DESCRIPTION_DELIMITER		: STRING:= '$L -> ';
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

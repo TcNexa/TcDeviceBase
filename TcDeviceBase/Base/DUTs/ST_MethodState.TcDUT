@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_MethodState" Id="{e971f521-adaa-4aa2-a43a-0b3a309521bd}">
+    <Declaration><![CDATA[TYPE ST_MethodState :
+STRUCT
+	init		: BOOL;
+	execute		: BOOL;
+	timeout		: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
