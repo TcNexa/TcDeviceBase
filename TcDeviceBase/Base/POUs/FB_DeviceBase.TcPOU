@@ -9,10 +9,7 @@ VAR
 	_tmpText				: Tc2_System.T_MaxString;
 	_methodTimeout			: Tc2_Standard.TON;
 	_methodState			: ST_MethodState;
-	_methodName				: STRING;
 	_executeMethod			: BOOL;
-	_cellTag				: STRING;
-	_stationTag				: STRING;
 	_name					: STRING;
 	_tag					: STRING;
 	_nameTag				: STRING;
@@ -32,7 +29,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
-_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= _methodName);
+_appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= _calledMethod);
 _appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= ' error');
 _appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= ERROR_DESCRIPTION_DELIMITER);
 _appendErrorDescription:= Tc2_Standard.CONCAT(STR1:= _appendErrorDescription, STR2:= description);]]></ST>
@@ -46,7 +43,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
-_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= _methodName);
+_getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= _calledMethod);
 _getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= ' ');
 _getBusyDescription:= Tc2_Standard.CONCAT(STR1:= _getBusyDescription, STR2:= description);]]></ST>
       </Implementation>
@@ -59,9 +56,9 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getErrorDescription:= _nameTag;
-IF (_methodName <> '') THEN
+IF (_calledMethod <> '') THEN
 	_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= ' ');
-	_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= _methodName);
+	_getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= _calledMethod);
 END_IF
 _getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= ' error ');
 _getErrorDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorDescription, STR2:= error);]]></ST>
@@ -75,7 +72,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
-_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= _methodName);
+_getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= _calledMethod);
 _getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= ' error with errorId ');
 _getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= UDINT_TO_STRING(errorId));
 _getErrorIdDescription:= Tc2_Standard.CONCAT(STR1:= _getErrorIdDescription, STR2:= '');]]></ST>
@@ -90,7 +87,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
-_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= _methodName);
+_getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= _calledMethod);
 _getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= ' error step ');	
 _getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= INT_TO_STRING(_Step.actual));	
 _getStepMissingError:= Tc2_Standard.CONCAT(STR1:= _getStepMissingError, STR2:= ' not found');					
@@ -104,7 +101,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getTimeoutDescription:= Tc2_Standard.CONCAT(STR1:= _name, STR2:= ' timeout during ');
-_getTimeoutDescription:= Tc2_Standard.CONCAT(STR1:= _getTimeoutDescription, STR2:= _methodName);]]></ST>
+_getTimeoutDescription:= Tc2_Standard.CONCAT(STR1:= _getTimeoutDescription, STR2:= _calledMethod);]]></ST>
       </Implementation>
     </Method>
     <Method Name="_getWarningIdDescription" Id="{6bf409e9-c142-4375-b852-87fc0dd72adb}" FolderPath="Methods\">
@@ -115,7 +112,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _nameTag, STR2:= ' ');
-_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= _methodName);
+_getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= _calledMethod);
 _getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= ' warning with warningId ');
 _getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= UDINT_TO_STRING(Id));
 _getWarningIdDescription:= Tc2_Standard.CONCAT(STR1:= _getWarningIdDescription, STR2:= '');]]></ST>
@@ -139,9 +136,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[_methodName:= methodName;
-
-IF (_calledMethod = '') THEN
+        <ST><![CDATA[IF (_calledMethod = '') THEN
 	_calledMethod:= methodName;
 	_Step.init();
 	_methodTimeout(IN:= FALSE);
@@ -171,17 +166,13 @@ END_IF]]></ST>
 VAR_INPUT
 	bInitRetains 	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
 	bInCopyCode 	: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
-	cellTag			: STRING;
-	stationTag		: STRING;
 	name			: STRING;
 	tag				: STRING;
 	timeout			: TIME;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^._cellTag:= cellTag;
-THIS^._stationTag:= stationTag;
-THIS^._name:= name;
+        <ST><![CDATA[THIS^._name:= name;
 THIS^._tag:= tag;
 THIS^._methodTime:= timeout;
 
