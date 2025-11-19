@@ -18,7 +18,7 @@
     <Company>TcNexa</Company>
     <Released>false</Released>
     <Title>TcDeviceBase</Title>
-    <ProjectVersion>1.0.0.0</ProjectVersion>
+    <ProjectVersion>2.0.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{97b7b969-1a00-4526-9b48-343321aa96be}</Id>
@@ -128,10 +128,6 @@
     <Compile Include="Base\POUs\FB_DeviceBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="GVLs\GVL_DeviceBase.TcGVL">
-      <SubType>Code</SubType>
-      <LinkAlways>true</LinkAlways>
-    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -146,7 +142,6 @@
     <Folder Include="Base" />
     <Folder Include="Base\DUTs" />
     <Folder Include="Base\POUs" />
-    <Folder Include="GVLs" />
     <Folder Include="Tests" />
     <Folder Include="Version" />
   </ItemGroup>
@@ -175,16 +170,16 @@
   </ItemGroup>
   <ItemGroup>
     <PlaceholderResolution Include="Tc2_Standard">
-      <Resolution>Tc2_Standard, 3.3.3.0 (Beckhoff Automation GmbH)</Resolution>
+      <Resolution>Tc2_Standard, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc2_System">
-      <Resolution>Tc2_System, 3.5.3.0 (Beckhoff Automation GmbH)</Resolution>
+      <Resolution>Tc2_System, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="Tc3_Module">
-      <Resolution>Tc3_Module, 3.3.23.0 (Beckhoff Automation GmbH)</Resolution>
+      <Resolution>Tc3_Module, * (Beckhoff Automation GmbH)</Resolution>
     </PlaceholderResolution>
     <PlaceholderResolution Include="TcProcess">
-      <Resolution>TcProcess, 1.0.0.0 (TcNexa)</Resolution>
+      <Resolution>TcProcess, * (TcNexa)</Resolution>
     </PlaceholderResolution>
   </ItemGroup>
   <ProjectExtensions>
