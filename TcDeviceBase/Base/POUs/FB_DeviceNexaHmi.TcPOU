@@ -1,0 +1,410 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="FB_DeviceNexaHmi" Id="{31610939-7e9d-4c44-bbec-85bbd63ac92f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DeviceNexaHmi IMPLEMENTS TcNexa_Devices_Hmi_TcNexaHmi.I_NexaHmi
+VAR
+	(* Mqtt *)
+	_Client						: Tc3_IotBase.FB_IotMqttClient;
+	_ClientMessageQueue			: Tc3_IotBase.FB_IotMqttMessageQueue;
+	_ClientMessage				: Tc3_IotBase.FB_IotMqttMessage;
+	_isInit						: BOOL;
+	_onClientConnection			: Tc2_Standard.R_TRIG;
+	_isClientConnected			: BOOL;
+	_onNewMessage				: BOOL;
+	_willPayload				: STRING;
+	_topicPrefix				: STRING(255);
+	(* Message *)
+	_messageTopic				: Tc2_System.T_MaxString;
+	_messageLastTopicLevel		: Tc2_System.T_MaxString;
+	_messageTopicSplitter		: TcNexa_Components_TcUtilities.FB_TextSplitter;
+	_messagePayload				: Tc2_System.T_MaxString;		
+	(* General *)
+	_timerPublish				: Tc2_Standard.TON;		
+	_tmpText					: Tc2_System.T_MaxString;					
+	_tmpCounter					: USINT;			
+	(* Information *)
+	_cellTag					: STRING;
+	_stationTag					: STRING;
+	_tag						: STRING;
+	_name						: STRING;
+	_deviceType					: STRING;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Private" Id="{4c0fe852-9ce0-48f1-9eea-ab438145efaa}" />
+    <Folder Name="Property" Id="{ac2259b0-596b-4594-9468-54cbef11ff21}" />
+    <Method Name="_handleMessageQueue" Id="{dca2037c-839e-43a0-9acf-6ef3e3b5a4fd}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _handleMessageQueue
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_onNewMessage:= FALSE;
+IF (_ClientMessageQueue.nQueuedMessages > 0) THEN
+	IF _ClientMessageQueue.Dequeue(fbMessage:= _ClientMessage)  THEN
+		_ClientMessage.GetTopic(
+			pTopic				:= ADR(_messageTopic),
+			nTopicSize			:= SIZEOF(_messageTopic));
+		_ClientMessage.GetPayload(
+			pPayload			:= ADR(_messagePayload),
+			nPayloadSize		:= SIZEOF(_messagePayload),
+			bSetNullTermination	:= TRUE);
+		_messageTopicSplitter.split(
+			source				:= _messageTopic,
+			delimiter			:= '/',
+			Response			:= 0);
+		_messageLastTopicLevel:= _messageTopicSplitter.getValueAt(
+			index				:= _messageTopicSplitter.size,
+			Response			:= 0);
+		_onNewMessage:= TRUE;
+	END_IF
+ELSE
+	_messageTopic:= '';
+	_messagePayload:= '';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_init" Id="{ab8543b6-9bf7-4a0c-9640-16102ede265a}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _init
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF _isInit THEN RETURN; END_IF
+_isInit:= TRUE;
+
+_Client.ipMessageQueue:= _ClientMessageQueue;
+
+_tmpText:= '';
+IF (_cellTag <> '') THEN
+	_tmpText:= Tc2_Standard.CONCAT(STR1:= _cellTag, STR2:= '/');
+END_IF
+IF (_stationTag <> '') THEN
+	_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= _stationTag);
+	_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= '/');
+END_IF
+//_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= 'devices/');
+//_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= _deviceType);
+//_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= '/');
+//_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= _tag);
+//_tmpText:= Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= '/');
+_topicPrefix:= '';
+_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'devices/');
+_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= _deviceType);
+_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= '/');
+_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= _tag);
+_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= '/');
+
+_Client.sTopicPrefix:= _tmpText;
+_Client.sClientId:= CONCAT(STR1:= _tmpText, STR2:= _topicPrefix);
+(* Will *)
+_willPayload:= BOOL_TO_STRING(FALSE);
+_Client.stWill.sTopic:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'active');
+_Client.stWill.pPayload:= ADR(_willPayload);
+_Client.stWill.nPayloadSize:= INT_TO_UDINT(Tc2_Standard.LEN(_willPayload));
+_Client.stWill.eQoS:= TcIotMqttQos.AtMostOnceDelivery;
+_Client.stWill.bRetain:= TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_onConnection" Id="{84dcacd7-23ca-48c2-9025-8b065b67c935}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _onConnection
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _onClientConnection.Q THEN RETURN; END_IF
+
+(*** PUBLISH ***)
+publish(
+	topic	:= 'active',
+	payload	:= BOOL_TO_STRING(TRUE));
+publish(
+	topic	:= 'general/name',
+	payload	:= _name);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="cellTag" Id="{7fc0fc5f-3209-03b6-180e-c634e7c4711c}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY cellTag : STRING]]></Declaration>
+      <Get Name="Get" Id="{f1624fad-f1df-088f-1585-556c70af46a6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[cellTag:= _cellTag;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{fa4ceb49-3efc-0d00-231b-b5272c95ce11}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_cellTag:= cellTag;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="deviceName" Id="{9301a3f4-404a-0f4c-2325-7147388372cb}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY deviceName : STRING]]></Declaration>
+      <Get Name="Get" Id="{de38bb35-dc53-0c52-2d34-33327d1a4b4d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[deviceName:= _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{da184374-96a1-0fbd-3525-4e42db88e66c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name:= deviceName;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="deviceTag" Id="{426e8361-f81e-0524-2735-38505f3ba693}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY deviceTag : STRING]]></Declaration>
+      <Get Name="Get" Id="{97a05351-87af-0f52-2e2f-8fa57d56e8a2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[deviceTag:= _tag;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{1abb896a-e4e2-0cde-2183-e20318016a32}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_tag:= deviceTag;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{0e08b87e-fec2-4736-8ba0-0f2727a14467}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains 	: BOOL; 	// if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode 	: BOOL;  	// if TRUE, the instance afterwards gets moved into the copy code (online change)
+	deviceType		: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^._deviceType:= deviceType;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_main" Id="{be3f4a72-9a83-471d-a4ed-dfe8be0c13cb}">
+      <Declaration><![CDATA[METHOD PUBLIC FB_main
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_init();
+
+_Client.Execute(bConnect:= TRUE);
+_isClientConnected:= _Client.bConnected;
+_onClientConnection(CLK:= _isClientConnected);
+
+_onConnection();
+_handleMessageQueue();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="hostName" Id="{6263411a-4833-09a9-11bf-17f6658dd39e}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC hostName : Tc2_System.T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{67924fc0-8f10-03e9-0eac-2c6109b2a4d9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[hostName:= _Client.sHostName;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{47f16228-890d-0fbf-11f2-f5fee2287177}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Client.sHostName:= hostName;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="hostPort" Id="{08fea268-0350-0121-3725-f79d7a409707}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC hostPort : UINT]]></Declaration>
+      <Get Name="Get" Id="{6105a4e2-65c7-0223-0cdf-eea6de9dd3f1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[hostPort:= _Client.nHostPort;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e2e43a1d-f66d-0ba6-279e-6c1dcd1bbbd7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Client.nHostPort:= hostPort;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="isConnected" Id="{0f140dfb-135a-4dbc-ae0f-93d764077cc8}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC isConnected : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c2238e84-bc0c-473a-8e5a-0aa400cb7889}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[isConnected:= _Client.bConnected;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="messageFullTopic" Id="{981a995e-f850-47bc-8e0d-775918394e23}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY messageFullTopic : Tc2_System.T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{3d84d7ff-d343-461f-a042-3858d38584af}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[messageFullTopic:= _messageTopic;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="messageLastTopicLevel" Id="{b0e6f8b9-2404-42a1-b829-43a26869dee4}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC messageLastTopicLevel : STRING]]></Declaration>
+      <Get Name="Get" Id="{8f9ce054-cddb-494b-8c4d-a8163ac888ba}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[messageLastTopicLevel:= _messageLastTopicLevel;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="messagePayload" Id="{7cb67793-e6db-4099-a4dc-35fce14a4b50}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY messagePayload : Tc2_System.T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{a58d6845-3be3-4f3a-b090-7ffc1d61efb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[messagePayload:= _messagePayload;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="onNewMessage" Id="{c99e0eb9-1aae-4662-93e3-bec6fa5ba77f}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC onNewMessage : BOOL]]></Declaration>
+      <Get Name="Get" Id="{063eeae2-80c9-4542-b842-b22b422cc6a8}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[onNewMessage:= _onNewMessage;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="publish" Id="{05ea8e29-d3b0-452d-9560-47281e9b8e60}">
+      <Declaration><![CDATA[METHOD PUBLIC publish : BOOL
+VAR_INPUT
+	topic		: Tc2_System.T_MaxString;
+	payload		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_tmpText:= Tc2_Standard.CONCAT(
+	STR1:= _topicPrefix,
+	STR2:= topic);
+
+publish:= _Client.Publish(
+			sTopic			:= _tmpText,
+			pPayload		:= ADR(payload),
+			nPayloadSize	:= INT_TO_UDINT(Tc2_Standard.LEN(payload)),
+			eQoS			:= TcIotMqttQos.AtMostOnceDelivery,
+			bRetain			:= TRUE,
+			bQueue			:= FALSE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="publishAdr" Id="{e8660ff2-9213-0058-3562-2ad53a802927}">
+      <Declaration><![CDATA[METHOD PUBLIC publishAdr : BOOL
+VAR_INPUT
+	topic		: Tc2_System.T_MaxString;
+	payload		: PVOID;
+	payloadSize	: UDINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_tmpText:= Tc2_Standard.CONCAT(
+	STR1:= _topicPrefix,
+	STR2:= topic);
+
+publishAdr:= _Client.Publish(
+			sTopic			:= _tmpText,
+			pPayload		:= payload,
+			nPayloadSize	:= payloadSize,
+			eQoS			:= TcIotMqttQos.AtMostOnceDelivery,
+			bRetain			:= TRUE,
+			bQueue			:= FALSE);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="stationTag" Id="{8c0801d6-956f-0868-178d-81c3bb4bae86}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY stationTag : STRING]]></Declaration>
+      <Get Name="Get" Id="{17ce457c-7267-0ace-36e9-b7b355360199}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[stationTag:= _stationTag;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8bc5a05f-c3a2-044f-2fad-0343ffcd6299}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_stationTag:= stationTag;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="subscribe" Id="{6821daac-b50d-4a4a-a210-c7128535a96b}">
+      <Declaration><![CDATA[METHOD PUBLIC subscribe : BOOL
+VAR_INPUT
+	topic		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_tmpText:= Tc2_Standard.CONCAT(
+	STR1:= _topicPrefix,
+	STR2:= topic);
+
+subscribe:= _Client.Subscribe(
+				sTopic	:= _tmpText,
+				eQoS	:= TcIotMqttQos.AtLeastOnceDelivery);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="topicPrefix" Id="{4f4da27d-86b2-44cf-b47d-9170eaa53526}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC topicPrefix : Tc2_System.T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{836ca81f-cef3-49f7-8581-73d2c82f1ed2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[topicPrefix:= _Client.sTopicPrefix;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="unsubscribe" Id="{017ed50d-7686-4346-a382-dcb7f9ba6c47}">
+      <Declaration><![CDATA[METHOD PUBLIC unsubscribe
+VAR_INPUT
+	topic		: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_tmpText:= Tc2_Standard.CONCAT(
+	STR1:= _topicPrefix,
+	STR2:= topic);
+
+_Client.Unsubscribe(sTopic:= _tmpText);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>TcDeviceBase</Name>
-    <ProgramVersion>3.1.4024.0</ProgramVersion>
+    <ProgramVersion>3.1.4026.19</ProgramVersion>
     <Application>{53983192-efcf-4745-8e86-06fce683096d}</Application>
     <TypeSystem>{9debe551-e335-4b4e-a053-b3adb94f9422}</TypeSystem>
     <Implicit_Task_Info>{d9e4b067-320d-4b28-b8eb-0654efc5f00e}</Implicit_Task_Info>
@@ -120,12 +120,16 @@
     <DefaultNamespace>TcNexa_Devices_Base_TcDeviceBase</DefaultNamespace>
     <Author>ATI Software Engineering</Author>
     <CombineIds>true</CombineIds>
+    <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Base\DUTs\ST_MethodState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Base\POUs\FB_DeviceBase.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Base\POUs\FB_DeviceNexaHmi.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
@@ -154,13 +158,25 @@
       <DefaultResolution>Tc2_System, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc2_System</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="Tc3_IotBase">
+      <DefaultResolution>Tc3_IotBase, * (Beckhoff Automation GmbH)</DefaultResolution>
+      <Namespace>Tc3_IotBase</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="Tc3_Module">
       <DefaultResolution>Tc3_Module, * (Beckhoff Automation GmbH)</DefaultResolution>
       <Namespace>Tc3_Module</Namespace>
     </PlaceholderReference>
+    <PlaceholderReference Include="TcNexaHmi">
+      <DefaultResolution>TcNexaHmi, * (TcNexa)</DefaultResolution>
+      <Namespace>TcNexa_Devices_Hmi_TcNexaHmi</Namespace>
+    </PlaceholderReference>
     <PlaceholderReference Include="TcProcess">
       <DefaultResolution>TcProcess, * (TcNexa)</DefaultResolution>
       <Namespace>TcNexa_Components_TcProcess</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="TcUtilities">
+      <DefaultResolution>TcUtilities, * (TcNexa)</DefaultResolution>
+      <Namespace>TcNexa_Components_TcUtilities</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
