@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.13">
+  <POU Name="FB_DeviceButtonNexaHmi" Id="{aae6fd5e-0725-0be4-1f72-834db349871f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DeviceButtonNexaHmi
+VAR
+	_Hmi					: TcNexa_Devices_Hmi_TcNexaHmi.I_NexaHmi;
+	_onHmiConnection		: Tc2_Standard.R_TRIG;
+	_isHmiConnected			: BOOL;
+	_topicPrefix			: Tc2_System.T_MaxString;
+	_topic					: Tc2_System.T_MaxString;
+	_tmpText				: Tc2_System.T_MaxString;
+	_name					: STRING;
+	_enabled				: BOOL;
+	_focused				: BOOL;
+	_onTap					: BOOL;
+	_onTapDown				: BOOL;
+	_onTapUp				: BOOL;
+	_onLongPress			: BOOL;
+	(* *)               	
+	_lastName				: STRING;
+	_lastEnabled			: BOOL;
+	_lastFocused			: BOOL;
+	_loggingEnabled			: BOOL;
+	_lastLoggingEnabled		: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Private" Id="{f53e4b0f-dd2b-0237-030d-e5e0b11aa5db}" />
+    <Folder Name="Property" Id="{0fa94dbd-1dd9-0079-1ded-cfa42df8423e}" />
+    <Method Name="_handleNewMessages" Id="{5d223132-27f0-0702-0b6f-a5c9f4a26ca4}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _handleNewMessages
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_onTap:= FALSE;
+_onTapDown:= FALSE;
+_onTapUp:= FALSE;
+_onLongPress:= FALSE;
+
+IF NOT _isHmiConnected THEN RETURN; END_IF
+
+IF _Hmi.onNewMessage THEN
+	_tmpText:= Tc2_Standard.CONCAT(STR1:= _Hmi.topicPrefix, STR2:= _topicPrefix);
+	IF (_Hmi.messageFullTopic = Tc2_Standard.CONCAT(STR1:= _tmpText, STR2:= 'action')) THEN
+		IF (_Hmi.messagePayload = 'tap') AND _enabled THEN
+			_onTap:= TRUE;
+		ELSIF  (_Hmi.messagePayload = 'tapDown') AND _enabled THEN
+			_onTapDown:= TRUE;
+		ELSIF  (_Hmi.messagePayload = 'tapUp') AND _enabled THEN
+			_onTapUp:= TRUE;
+		ELSIF  (_Hmi.messagePayload = 'onLongPress') AND _enabled THEN
+			_onLongPress:= TRUE;
+		END_IF
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_onConnection" Id="{d59b68ef-7067-0b3b-2ec1-5e1d3e52b7d1}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _onConnection
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _onHmiConnection.Q THEN RETURN; END_IF
+
+IF (Tc2_Standard.RIGHT(STR:= _topic, SIZE:= 1) <> '/') THEN
+	_topicPrefix:= Tc2_Standard.CONCAT(STR1:= _topic, STR2:= '/');
+ELSE
+	_topicPrefix:= _topic;
+END_IF
+_Hmi.subscribe(topic:= CONCAT(STR1:= _topicPrefix, STR2:= 'action'));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="_updateTopics" Id="{a00f0fe8-9693-002f-3e64-904578ca0848}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PROTECTED _updateTopics
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT _isHmiConnected THEN RETURN; END_IF
+
+(* Name *)
+IF (_lastName <> _name) OR _onHmiConnection.Q THEN
+	_lastName:= _name;
+	_Hmi.publish(
+		topic	:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'name'),
+		payload	:= _name);
+END_IF
+(* Enabled *)
+IF (_lastEnabled <> _enabled) OR _onHmiConnection.Q THEN
+	_lastEnabled:= _enabled;
+	_Hmi.publish(
+		topic	:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'enabled'),
+		payload	:= BOOL_TO_STRING(_enabled));
+END_IF
+(* Focused *)
+IF (_lastFocused <> _focused) OR _onHmiConnection.Q THEN
+	_lastFocused:= _focused;
+	_Hmi.publish(
+		topic	:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'focused'),
+		payload	:= BOOL_TO_STRING(_focused));
+END_IF
+(* Logging Enabled *)
+IF (_lastLoggingEnabled <> _loggingEnabled) OR _onHmiConnection.Q THEN
+	_lastLoggingEnabled:= _loggingEnabled;
+	_Hmi.publish(
+		topic	:= Tc2_Standard.CONCAT(STR1:= _topicPrefix, STR2:= 'loggingEnabled'),
+		payload	:= BOOL_TO_STRING(_loggingEnabled));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="enabled" Id="{e920c8c3-3211-0509-0cff-f7fa2f297c04}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY enabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{bcd400dc-7c7e-0e24-264d-134629c72b2f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[enabled:= _enabled;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{0bc311b5-7d09-07c3-1bd7-ef275cd690fb}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_enabled:= enabled;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Method Name="FB_init" Id="{6cfeb88d-75c4-08da-09ff-7247c49dac6b}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains	: BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode 	: BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+	Hmi				: I_NexaHmi;
+	topic			: Tc2_System.T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^._Hmi:= Hmi;
+THIS^._topic:= topic;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_main" Id="{fa65ccd9-1bf8-0f1f-1cf1-ba47a7bc9fbc}">
+      <Declaration><![CDATA[METHOD PUBLIC FB_main
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_isHmiConnected:= _Hmi.isConnected;
+_onHmiConnection(CLK:= _isHmiConnected);
+
+_onConnection();
+_updateTopics();
+_handleNewMessages();]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="focused" Id="{b8135310-cdd4-0707-2e54-9cefd8bda2bd}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY focused : BOOL]]></Declaration>
+      <Get Name="Get" Id="{8401142e-bc73-0ba3-31a0-455728f3a2ad}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[focused:= _focused;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{e0ce8f60-9ccc-0a43-2e48-37b313bea1ac}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_focused:= focused;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="loggingEnabled" Id="{a70a0278-5fca-0ed5-1a7b-c6523e52041a}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY loggingEnabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3863de9d-ed59-0f29-1de9-334bda122796}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[loggingEnabled:= _loggingEnabled;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{c2964a96-4ef2-0bcf-2ff6-7a8e2c93f5d0}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_loggingEnabled:= loggingEnabled;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="name" Id="{031266c6-e2ee-0a3e-2f09-49062a32f9c4}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY PUBLIC name : STRING]]></Declaration>
+      <Get Name="Get" Id="{ff3d8992-a159-0342-0d08-8f4c59380c19}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[name:= _name;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{35ea1e70-ca23-0b40-2450-6e195c6ab40a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_name:= name;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="onLongPress" Id="{48486e2d-92a3-091e-1952-31d20561cb12}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY onLongPress : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4364e917-abbf-047b-17e8-340ab60cb6b7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[onLongPress:= _onLongPress;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="onTap" Id="{27baedde-78a2-01e0-038f-634b161f79b8}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY onTap : BOOL]]></Declaration>
+      <Get Name="Get" Id="{0847f5e3-d10f-0a44-1836-43607777cfb6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[onTap:= _onTap;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="onTapDown" Id="{609ad65e-ebfa-0bd4-2b09-b411cde6851a}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY onTapDown : BOOL]]></Declaration>
+      <Get Name="Get" Id="{fc4d56e2-b3f0-050d-1fb8-72a64b34843f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[onTapDown:= _onTapDown;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="onTapUp" Id="{d06c6d09-a1d4-0b6c-02f5-fb9c19c488a2}" FolderPath="Property\">
+      <Declaration><![CDATA[PROPERTY onTapUp : BOOL]]></Declaration>
+      <Get Name="Get" Id="{c92734ce-c270-0b52-0ae7-b75a916011ec}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[onTapUp:= _onTapUp;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>

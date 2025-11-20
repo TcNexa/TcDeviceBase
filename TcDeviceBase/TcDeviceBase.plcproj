@@ -132,6 +132,9 @@
     <Compile Include="Base\POUs\FB_DeviceNexaHmi.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Components\FB_DeviceButtonNexaHmi.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>
@@ -146,6 +149,7 @@
     <Folder Include="Base" />
     <Folder Include="Base\DUTs" />
     <Folder Include="Base\POUs" />
+    <Folder Include="Components" />
     <Folder Include="Tests" />
     <Folder Include="Version" />
   </ItemGroup>
