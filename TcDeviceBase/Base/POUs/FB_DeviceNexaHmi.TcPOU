@@ -388,7 +388,7 @@ subscribe:= _Client.Subscribe(
 END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[topicPrefix:= _Client.sTopicPrefix;]]></ST>
+          <ST><![CDATA[topicPrefix:= _Client.sClientId;//_Client.sTopicPrefix;]]></ST>
         </Implementation>
       </Get>
     </Property>
